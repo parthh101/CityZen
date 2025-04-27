@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Discussions - CityZen</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">CityZen</div>
+            <div class="nav-right">
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="services-resources.html">Services & Resources</a>
+                        <div class="dropdown-content">
+                            <a href="community-services.html">Community Services</a>
+                            <a href="local-events.html">Local Events</a>
+                            <a href="community-news.html">Community News</a>
+                            <a href="emergency-contacts.html">Emergency Contacts</a>
+                        </div>
+                    </li>
+                    <li><a href="feedback.html">Feedback</a></li>
+                </ul>
+                <div class="profile-section">
+                    <a href="#" class="profile-link">Profile</a>
+                    <div class="profile-dropdown">
+                        <a href="my-profile.html">My Profile</a>
+                        <a href="notifications.html">Notifications</a>
+                        <a href="#">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="discussions-container">
+        <div class="discussions-header">
+            <h1 class="page-title">Community Discussions</h1>
+            <button class="create-topic-btn">Start New Discussion</button>
+        </div>
+
+        <div class="discussions-filters">
+            <div class="search-box">
+                <input type="text" placeholder="Search discussions...">
+                <button class="search-btn">Search</button>
+            </div>
+            <div class="filter-options">
+                <select class="category-filter">
+                    <option value="">All Categories</option>
+                    <option value="general">General</option>
+                    <option value="events">Events</option>
+                    <option value="issues">Community Issues</option>
+                    <option value="suggestions">Suggestions</option>
+                </select>
+                <select class="sort-filter">
+                    <option value="recent">Most Recent</option>
+                    <option value="popular">Most Popular</option>
+                    <option value="active">Most Active</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="topics-list">
+            <!-- Topic 1 -->
+            <div class="topic-card">
+                <div class="topic-icon">🏘️</div>
+                <div class="topic-content">
+                    <h3 class="topic-title">Neighborhood Cleanup Initiative</h3>
+                    <p class="topic-description">Let's discuss organizing a community cleanup event for our neighborhood. Share your ideas and availability!</p>
+                    <div class="topic-meta">
+                        <span class="topic-category">Events</span>
+                        <span class="topic-stats">24 participants • 56 comments</span>
+                        <span class="topic-last-active">Last active: 2 hours ago</span>
+                    </div>
+                </div>
+                <a href="discussion-topic.html?id=1" class="join-discussion-btn">Join Discussion</a>
+            </div>
+
+            <!-- Topic 2 -->
+            <div class="topic-card">
+                <div class="topic-icon">🚧</div>
+                <div class="topic-content">
+                    <h3 class="topic-title">Road Construction Updates</h3>
+                    <p class="topic-description">Share updates and concerns about the ongoing road construction in Sector 4.</p>
+                    <div class="topic-meta">
+                        <span class="topic-category">Community Issues</span>
+                        <span class="topic-stats">42 participants • 89 comments</span>
+                        <span class="topic-last-active">Last active: 1 hour ago</span>
+                    </div>
+                </div>
+                <a href="discussion-topic.html?id=2" class="join-discussion-btn">Join Discussion</a>
+            </div>
+
+            <!-- Topic 3 -->
+            <div class="topic-card">
+                <div class="topic-icon">🎉</div>
+                <div class="topic-content">
+                    <h3 class="topic-title">Community Festival Planning</h3>
+                    <p class="topic-description">Let's plan the annual community festival! Share your ideas for activities, food, and entertainment.</p>
+                    <div class="topic-meta">
+                        <span class="topic-category">Events</span>
+                        <span class="topic-stats">18 participants • 34 comments</span>
+                        <span class="topic-last-active">Last active: 3 hours ago</span>
+                    </div>
+                </div>
+                <a href="discussion-topic.html?id=3" class="join-discussion-btn">Join Discussion</a>
+            </div>
+
+            <!-- Topic 4 -->
+            <div class="topic-card">
+                <div class="topic-icon">💡</div>
+                <div class="topic-content">
+                    <h3 class="topic-title">Community Garden Proposal</h3>
+                    <p class="topic-description">Discussing the possibility of creating a community garden in the vacant lot on Main Street.</p>
+                    <div class="topic-meta">
+                        <span class="topic-category">Suggestions</span>
+                        <span class="topic-stats">31 participants • 47 comments</span>
+                        <span class="topic-last-active">Last active: 5 hours ago</span>
+                    </div>
+                </div>
+                <a href="discussion-topic.html?id=4" class="join-discussion-btn">Join Discussion</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

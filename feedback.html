@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - CityZen</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">CityZen</div>
+            <div class="nav-right">
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="services-resources.html">Services & Resources</a>
+                        <div class="dropdown-content">
+                            <a href="community-services.html">Community Services</a>
+                            <a href="local-events.html">Local Events</a>
+                            <a href="community-news.html">Community News</a>
+                            <a href="emergency-contacts.html">Emergency Contacts</a>
+                        </div>
+                    </li>
+                    <li><a href="feedback.html">Feedback</a></li>
+                </ul>
+                <div class="dropdown">
+                    <a href="#" class="profile-link">Profile</a>
+                    <div class="dropdown-content">
+                        <a href="my-profile.html">My Profile</a>
+                        <a href="notifications.html">Notifications</a>
+                        <a href="#">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="feedback-container">
+        <div class="feedback-header">
+            <h1 class="page-title">Feedback Form</h1>
+            <p class="page-description">We value your input! Please share your thoughts, suggestions, or concerns with us.</p>
+        </div>
+
+        <form id="feedbackForm" class="feedback-form">
+            <!-- Hidden user_id field (will be populated by backend) -->
+            <input type="hidden" id="user_id" name="user_id">
+
+            <div class="form-group">
+                <label for="name">Full Name *</label>
+                <input type="text" id="name" name="name" required 
+                       placeholder="Enter your full name">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email" required 
+                       placeholder="Enter your email address">
+            </div>
+
+            <div class="form-group">
+                <label for="mobile">Mobile Number</label>
+                <input type="tel" id="mobile" name="mobile" 
+                       placeholder="Enter your mobile number (optional)">
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address *</label>
+                <textarea id="address" name="address" required 
+                          placeholder="Enter your complete address"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="subject">Subject *</label>
+                <select id="subject" name="subject" required>
+                    <option value="">Select a subject</option>
+                    <option value="general">General Feedback</option>
+                    <option value="complaint">Complaint</option>
+                    <option value="suggestion">Suggestion</option>
+                    <option value="service">Service Related</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="message">Message *</label>
+                <textarea id="message" name="message" required 
+                          placeholder="Enter your message (max 10000 characters)"
+                          maxlength="10000"></textarea>
+                <div class="character-count">
+                    <span id="charCount">0</span>/10000 characters
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="reset" class="cancel-btn">Clear Form</button>
+                <button type="submit" class="submit-btn">Submit Feedback</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Character counter for message field
+        const messageTextarea = document.getElementById('message');
+        const charCount = document.getElementById('charCount');
+
+        messageTextarea.addEventListener('input', function() {
+            const currentLength = this.value.length;
+            charCount.textContent = currentLength;
+            
+            if (currentLength > 10000) {
+                this.value = this.value.substring(0, 10000);
+                charCount.textContent = 10000;
+            }
+        });
+
+        // Form submission handler
+        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent the default form submission
+            
+            // Here you would typically send the data to your backend
+            // For now, we'll just show a thank you message
+            
+            // Get the user's name for a personalized message
+            const userName = document.getElementById('name').value;
+            
+            // Show thank you message
+            alert(`Thank you for your feedback, ${userName}! We appreciate you taking the time to share your thoughts with us.`);
+            
+            // Reset the form
+            this.reset();
+            charCount.textContent = '0';
+        });
+    </script>
+</body>
+</html> 
