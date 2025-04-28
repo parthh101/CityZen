@@ -6,6 +6,31 @@
     <title>CityZen - Smart City Services</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-left: 2rem;
+        }
+        .auth-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .login-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .signup-btn {
+            background-color: transparent;
+            color: #4CAF50;
+            border: 1px solid #4CAF50;
+        }
+        .auth-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
 </head>
 <body>
     <!-- Navbar -->
@@ -25,13 +50,17 @@
                     </li>
                     <li><a href="feedback.html" class="active">Feedback</a></li>
                 </ul>
-                <div class="profile-section" class="active">
+                <div id="authSection" class="auth-buttons">
+                    <a href="login.html" class="auth-btn login-btn">Login</a>
+                    <a href="signup.html" class="auth-btn signup-btn">Sign Up</a>
+                </div>
+                <div id="profileSection" class="profile-section" style="display: none;">
                     <a href="#" class="profile-link">Profile</a>
                     <div class="profile-dropdown">
                         <a href="#">My Profile</a>
                         <a href="#">Settings</a>
                         <a href="#">Notifications</a>
-                        <a href="#">Logout</a>
+                        <a href="#" id="logoutBtn">Logout</a>
                     </div>
                 </div>
             </div>
@@ -76,5 +105,30 @@
             <a href="feedback.html" class="btn">Submit</a>
         </div>
     </div>
+
+    <script>
+        // Check login status on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const authSection = document.getElementById('authSection');
+            const profileSection = document.getElementById('profileSection');
+
+            if (isLoggedIn) {
+                authSection.style.display = 'none';
+                profileSection.style.display = 'block';
+            } else {
+                authSection.style.display = 'flex';
+                profileSection.style.display = 'none';
+            }
+        });
+
+        // Handle logout
+        document.getElementById('logoutBtn')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userEmail');
+            window.location.reload();
+        });
+    </script>
 </body>
 </html> 
