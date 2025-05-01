@@ -6,37 +6,12 @@
     <title>CityZen - Smart City Services</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-        .auth-buttons {
-            display: flex;
-            gap: 1rem;
-            margin-left: 2rem;
-        }
-        .auth-btn {
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .login-btn {
-            background-color: #4CAF50;
-            color: white;
-        }
-        .signup-btn {
-            background-color: transparent;
-            color: #4CAF50;
-            border: 1px solid #4CAF50;
-        }
-        .auth-btn:hover {
-            opacity: 0.9;
-        }
-    </style>
 </head>
 <body>
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo" href="index.html">CityZen</div>
+            <div class="logo">CityZen</div>
             <div class="nav-right">
                 <ul class="nav-links">
                     <li><a href="index.html" class="active">Home</a></li>
@@ -54,13 +29,11 @@
                     <a href="login.html" class="auth-btn login-btn">Login</a>
                     <a href="signup.html" class="auth-btn signup-btn">Sign Up</a>
                 </div>
-                <div id="profileSection" class="profile-section" style="display: none;">
-                    <a href="#" class="profile-link">Profile</a>
-                    <div class="profile-dropdown">
-                        <a href="#">My Profile</a>
-                        <a href="#">Settings</a>
-                        <a href="#">Notifications</a>
-                        <a href="#" id="logoutBtn">Logout</a>
+                <div id="profileSection" class="dropdown" style="display: none;">
+                    <a href="#" class="active">Profile</a>
+                    <div class="dropdown-content">
+                        <a href="profile.html">My Profile</a>
+                        <a href="login.html" id="logoutBtn">Logout</a>
                     </div>
                 </div>
             </div>
@@ -109,11 +82,12 @@
     <script>
         // Check login status on page load
         document.addEventListener('DOMContentLoaded', function() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user'));
             const authSection = document.getElementById('authSection');
             const profileSection = document.getElementById('profileSection');
 
-            if (isLoggedIn) {
+            if (token && user) {
                 authSection.style.display = 'none';
                 profileSection.style.display = 'block';
             } else {
@@ -125,9 +99,9 @@
         // Handle logout
         document.getElementById('logoutBtn')?.addEventListener('click', function(e) {
             e.preventDefault();
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('userEmail');
-            window.location.reload();
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
         });
     </script>
 </body>
