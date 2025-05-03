@@ -24,11 +24,7 @@
                     </li>
                     <li><a href="feedback.html" class="active">Feedback</a></li>
                 </ul>
-                <div id="authSection" class="auth-buttons">
-                    <a href="login.html" class="auth-btn login-btn">Login</a>
-                    <a href="signup.html" class="auth-btn signup-btn">Sign Up</a>
-                </div>
-                <div id="profileSection" class="dropdown" style="display: none;">
+                <div id="profileSection" class="dropdown">
                     <a href="#" class="active">Profile</a>
                     <div class="dropdown-content">
                         <a href="profile.html">My Profile</a>
@@ -104,6 +100,31 @@
     </div>
 
     <script>
+        // Check login status and redirect if not logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user'));
+
+            if (!token || !user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Pre-fill the form with user data
+            document.getElementById('name').value = user.full_name || '';
+            document.getElementById('email').value = user.email || '';
+            document.getElementById('mobile').value = user.phone_number || '';
+            document.getElementById('address').value = user.address || '';
+        });
+
+        // Handle logout
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        });
+
         // Character counter for message field
         const messageTextarea = document.getElementById('message');
         const charCount = document.getElementById('charCount');
@@ -119,21 +140,50 @@
         });
 
         // Form submission handler
-        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Prevent the default form submission
+        document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
             
-            // Here you would typically send the data to your backend
-            // For now, we'll just show a thank you message
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user'));
             
-            // Get the user's name for a personalized message
-            const userName = document.getElementById('name').value;
-            
-            // Show thank you message
-            alert(`Thank you for your feedback, ${userName}! We appreciate you taking the time to share your thoughts with us.`);
-            
-            // Reset the form
-            this.reset();
-            charCount.textContent = '0';
+            if (!token || !user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Get the user ID from the token
+            const tokenData = JSON.parse(atob(token.split('.')[1]));
+            const userId = tokenData.sub;
+
+            const formData = {
+                user_id: userId,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+            };
+
+            try {
+                const response = await fetch('http://localhost:8000/api/feedback/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Thank you for your feedback! We appreciate you taking the time to share your thoughts with us.');
+                    this.reset();
+                    charCount.textContent = '0';
+                } else {
+                    throw new Error(data.error || 'Failed to submit feedback');
+                }
+            } catch (error) {
+                console.error('Error submitting feedback:', error);
+                alert('Failed to submit feedback. Please try again later.');
+            }
         });
     </script>
 </body>

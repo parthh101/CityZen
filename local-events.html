@@ -24,11 +24,7 @@
                     </li>
                     <li><a href="feedback.html">Feedback</a></li>
                 </ul>
-                <div id="authSection" class="auth-buttons">
-                    <a href="login.html" class="auth-btn login-btn">Login</a>
-                    <a href="signup.html" class="auth-btn signup-btn">Sign Up</a>
-                </div>
-                <div id="profileSection" class="dropdown" style="display: none;">
+                <div id="profileSection" class="dropdown">
                     <a href="#" class="active">Profile</a>
                     <div class="dropdown-content">
                         <a href="profile.html">My Profile</a>
@@ -123,5 +119,26 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Check login status and redirect if not logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user'));
+
+            if (!token || !user) {
+                window.location.href = 'login.html';
+                return;
+            }
+        });
+
+        // Handle logout
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        });
+    </script>
 </body>
 </html> 
