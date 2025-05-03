@@ -16,22 +16,23 @@
                 <ul class="nav-links">
                     <li><a href="index.html">Home</a></li>
                     <li class="dropdown">
-                        <a href="#">Services & Resources</a>
+                        <a href="#" class="active">Services & Resources</a>
                         <div class="dropdown-content">
-                            <a href="#">Community Services</a>
-                            <a href="#">Local Resources</a>
-                            <a href="#">Emergency Contacts</a>
+                            <a href="local-events.html">Local Events</a>
+                            <a href="emergency-contacts.html">Emergency Contacts</a>
                         </div>
                     </li>
-                    <li><a href="#">Feedback</a></li>
+                    <li><a href="feedback.html">Feedback</a></li>
                 </ul>
-                <div class="profile-section">
-                    <a href="#" class="profile-link">Profile</a>
-                    <div class="profile-dropdown">
-                        <a href="#">My Profile</a>
-                        <a href="#">Settings</a>
-                        <a href="#">Notifications</a>
-                        <a href="#">Logout</a>
+                <div id="authSection" class="auth-buttons">
+                    <a href="login.html" class="auth-btn login-btn">Login</a>
+                    <a href="signup.html" class="auth-btn signup-btn">Sign Up</a>
+                </div>
+                <div id="profileSection" class="dropdown" style="display: none;">
+                    <a href="#" class="active">Profile</a>
+                    <div class="dropdown-content">
+                        <a href="profile.html">My Profile</a>
+                        <a href="login.html" id="logoutBtn">Logout</a>
                     </div>
                 </div>
             </div>

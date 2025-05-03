@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Contacts - CityZen</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">CityZen</div>
+            <div class="nav-right">
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="active">Services & Resources</a>
+                        <div class="dropdown-content">
+                            <a href="local-events.html">Local Events</a>
+                            <a href="emergency-contacts.html">Emergency Contacts</a>
+                        </div>
+                    </li>
+                    <li><a href="feedback.html">Feedback</a></li>
+                </ul>
+                <div id="authSection" class="auth-buttons">
+                    <a href="login.html" class="auth-btn login-btn">Login</a>
+                    <a href="signup.html" class="auth-btn signup-btn">Sign Up</a>
+                </div>
+                <div id="profileSection" class="dropdown" style="display: none;">
+                    <a href="#" class="active">Profile</a>
+                    <div class="dropdown-content">
+                        <a href="profile.html">My Profile</a>
+                        <a href="login.html" id="logoutBtn">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="emergency-contacts-container">
+            <h1>Emergency Contacts</h1>
+            <p class="emergency-note">In case of emergency, please dial the appropriate number immediately.</p>
+
+            <div class="emergency-grid">
+                <!-- Police -->
+                <div class="emergency-card">
+                    <h2>Police</h2>
+                    <div class="contact-info">
+                        <p class="number">100</p>
+                        <p class="description">For immediate police assistance</p>
+                    </div>
+                </div>
+
+                <!-- Ambulance -->
+                <div class="emergency-card">
+                    <h2>Ambulance</h2>
+                    <div class="contact-info">
+                        <p class="number">108</p>
+                        <p class="description">For medical emergencies</p>
+                    </div>
+                </div>
+
+                <!-- Fire Brigade -->
+                <div class="emergency-card">
+                    <h2>Fire Brigade</h2>
+                    <div class="contact-info">
+                        <p class="number">101</p>
+                        <p class="description">For fire emergencies</p>
+                    </div>
+                </div>
+
+                <!-- Women's Helpline -->
+                <div class="emergency-card">
+                    <h2>Women's Helpline</h2>
+                    <div class="contact-info">
+                        <p class="number">1091</p>
+                        <p class="description">For women in distress</p>
+                    </div>
+                </div>
+
+                <!-- Child Helpline -->
+                <div class="emergency-card">
+                    <h2>Child Helpline</h2>
+                    <div class="contact-info">
+                        <p class="number">1098</p>
+                        <p class="description">For child protection</p>
+                    </div>
+                </div>
+
+                <!-- Disaster Management -->
+                <div class="emergency-card">
+                    <h2>Disaster Management</h2>
+                    <div class="contact-info">
+                        <p class="number">1078</p>
+                        <p class="description">For disaster-related emergencies</p>
+                    </div>
+                </div>
+
+                <!-- Railway Helpline -->
+                <div class="emergency-card">
+                    <h2>Railway Helpline</h2>
+                    <div class="contact-info">
+                        <p class="number">139</p>
+                        <p class="description">For railway-related emergencies</p>
+                    </div>
+                </div>
+
+                <!-- Road Accident Emergency -->
+                <div class="emergency-card">
+                    <h2>Road Accident Emergency</h2>
+                    <div class="contact-info">
+                        <p class="number">1073</p>
+                        <p class="description">For road accident emergencies</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="emergency-tips">
+                <h2>Emergency Tips</h2>
+                <ul>
+                    <li>Stay calm and speak clearly when calling emergency services</li>
+                    <li>Provide your exact location and the nature of the emergency</li>
+                    <li>Follow the instructions given by the emergency operator</li>
+                    <li>Do not hang up until the operator tells you to do so</li>
+                    <li>If possible, stay with the victim until help arrives</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check login status
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user'));
+            const authSection = document.getElementById('authSection');
+            const profileSection = document.getElementById('profileSection');
+
+            if (token && user) {
+                authSection.style.display = 'none';
+                profileSection.style.display = 'block';
+            } else {
+                authSection.style.display = 'flex';
+                profileSection.style.display = 'none';
+            }
+        });
+
+        // Handle logout
+        document.getElementById('logoutBtn')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html> 

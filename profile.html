@@ -13,7 +13,27 @@
             <div class="logo">CityZen</div>
             <div class="nav-right">
                 <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Services & Resources</a>
+                        <div class="dropdown-content">
+                            <a href="local-events.html">Local Events</a>
+                            <a href="emergency-contacts.html">Emergency Contacts</a>
+                        </div>
+                    </li>
+                    <li><a href="feedback.html">Feedback</a></li>
                 </ul>
+                <div id="authSection" class="auth-buttons">
+                    <a href="login.html" class="auth-btn login-btn">Login</a>
+                    <a href="signup.html" class="auth-btn signup-btn">Sign Up</a>
+                </div>
+                <div id="profileSection" class="dropdown" style="display: none;">
+                    <a href="#" class="active">Profile</a>
+                    <div class="dropdown-content">
+                        <a href="profile.html">My Profile</a>
+                        <a href="login.html" id="logoutBtn">Logout</a>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
@@ -71,6 +91,7 @@
             try {
                 console.log('Loading profile data...');
                 const response = await fetch('http://localhost:8000/api/profile', {
+                    method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -81,13 +102,13 @@
 
                 if (response.ok) {
                     // Populate form fields
-                    document.getElementById('fullName').value = data.full_name || '';
-                    document.getElementById('email').value = data.email || '';
-                    document.getElementById('dob').value = data.dob ? data.dob.split('T')[0] : '';
-                    document.getElementById('phone').value = data.phone || '';
-                    document.getElementById('address').value = data.address || '';
-                    document.getElementById('city').value = data.city || '';
-                    document.getElementById('state').value = data.state || '';
+                    document.getElementById('fullName').value = data.user.full_name || '';
+                    document.getElementById('email').value = data.user.email || '';
+                    document.getElementById('dob').value = data.user.date_of_birth ? data.user.date_of_birth.split('T')[0] : '';
+                    document.getElementById('phone').value = data.user.phone_number || '';
+                    document.getElementById('address').value = data.user.address || '';
+                    document.getElementById('city').value = data.user.city || '';
+                    document.getElementById('state').value = data.user.state || '';
                 } else {
                     console.error('Failed to load profile data:', data);
                     if (response.status === 401) {
