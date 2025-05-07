@@ -5,69 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - CityZen</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">CityZen</div>
-            <div class="nav-right">
-                <ul class="nav-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li class="dropdown">
-                        <a href="#">Services & Resources</a>
-                        <div class="dropdown-content">
-                            <a href="local-events.html">Local Events</a>
-                            <a href="emergency-contacts.html">Emergency Contacts</a>
-                        </div>
-                    </li>
-                    <li><a href="feedback.html">Feedback</a></li>
-                </ul>
-                <div id="authSection" class="auth-buttons">
-                    <a href="login.html" class="auth-btn login-btn">Login</a>
-                    <a href="signup.html" class="auth-btn signup-btn">Sign Up</a>
-                </div>
-                <div id="profileSection" class="dropdown" style="display: none;">
-                    <a href="#" class="active">Profile</a>
-                    <div class="dropdown-content">
-                        <a href="profile.html">My Profile</a>
-                        <a href="login.html" id="logoutBtn">Logout</a>
-                    </div>
-                </div>
+    <!-- App Logo -->
+    <div class="app-logo">
+        <h1>CityZen</h1>
+    </div>
+  
+    <!-- Login Form -->
+    <div class="container">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h1>Welcome Back</h1>
+                <p>Please login to your account</p>
             </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <div class="auth-container">
-        <div class="auth-header">
-            <h1>Login</h1>
-            <p>Welcome back! Please enter your credentials.</p>
-        </div>
-
-        <div class="container">
-            <div class="form-container">
-                <h2>Login to CityZen</h2>
-                <form id="loginForm">
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required>
-                    </div>
-                    <button type="submit" class="btn-primary">Login</button>
-                </form>
-                <p class="form-footer">
-                    Don't have an account? <a href="signup.html">Sign up</a>
-                </p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="auth-btn">Login</button>
+            </form>
+            <div class="auth-link">
+                <p>Don't have an account? <a href="signup.html">Sign up</a></p>
             </div>
         </div>
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const email = document.getElementById('email').value;
@@ -82,22 +53,21 @@
                     body: JSON.stringify({ email, password })
                 });
 
-                const data = await response.json();
-
-                if (response.ok) {
-                    // Store the JWT token and user data
-                    localStorage.setItem('token', data.access_token);
-                    localStorage.setItem('user', JSON.stringify(data.user));
-                    
-                    // Redirect to index page
-                    window.location.href = 'index.html';
-                } else {
-                    console.error('Login failed:', data);
-                    alert(data.error || 'Login failed. Please check your credentials and try again.');
+                if (!response.ok) {
+                    throw new Error('Login failed');
                 }
+
+                const data = await response.json();
+                
+                // Store token and user data
+                localStorage.setItem('token', data.access_token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                
+                // Redirect to home page
+                window.location.href = 'index.html';
             } catch (error) {
-                console.error('Error during login:', error);
-                alert('An error occurred during login. Please check your internet connection and try again.');
+                console.error('Login error:', error);
+                alert('Login failed. Please check your credentials and try again.');
             }
         });
     </script>

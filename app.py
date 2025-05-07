@@ -6,7 +6,6 @@ import os
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
-from passlib.context import CryptContext
 from functools import wraps
 
 # Load environment variables
@@ -17,11 +16,6 @@ app = Flask(__name__)
 CORS(app)
 
 # Security configuration
-pwd_context = CryptContext(
-    schemes=["bcrypt"],
-    deprecated="auto",
-    bcrypt__rounds=12
-)
 SECRET_KEY = "your-secret-key-here"  # In production, use a secure secret key
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
@@ -41,19 +35,9 @@ def get_db():
         print(f"Error connecting to database: {e}")
         return None
 
-# Security utilities
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
-
-def get_password_hash(password):
-    return pwd_context.hash(password)
-
-def create_access_token(data: dict, expires_delta: timedelta = None):
+def create_access_token(data: dict, expires_delta: timedelta):
     to_encode = data.copy()
-    if expires_delta:
-        expire = datetime.utcnow() + expires_delta
-    else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
+    expire = datetime.utcnow() + expires_delta
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
@@ -82,7 +66,7 @@ def root():
 @app.route('/api/register', methods=['POST'])
 def register():
     data = request.get_json()
-    required_fields = ['full_name', 'email', 'password', 'date_of_birth', 
+    required_fields = ['full_name', 'email', 'password', 
                       'phone_number', 'address', 'city', 'state']
     
     for field in required_fields:
@@ -101,17 +85,14 @@ def register():
         if cursor.fetchone():
             return jsonify({"error": "Email already registered"}), 400
             
-        # Hash the password
-        hashed_password = get_password_hash(data['password'])
-        
         cursor.execute(
             """
-            INSERT INTO users (full_name, email, password, date_of_birth, phone_number, address, city, state)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO users (full_name, email, password, phone_number, address, city, state)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
             RETURNING user_id
             """,
             (
-                data['full_name'], data['email'], hashed_password, data['date_of_birth'],
+                data['full_name'], data['email'], data['password'],
                 data['phone_number'], data['address'], data['city'], data['state']
             )
         )
@@ -150,12 +131,12 @@ def login():
             
         cursor = conn.cursor()
         cursor.execute(
-            "SELECT * FROM users WHERE email = %s",
-            (data['email'],)
+            "SELECT * FROM users WHERE email = %s AND password = %s",
+            (data['email'], data['password'])
         )
         user_data = cursor.fetchone()
         
-        if not user_data or not verify_password(data['password'], user_data['password']):
+        if not user_data:
             return jsonify({"error": "Invalid credentials"}), 401
         
         # Create access token
@@ -225,8 +206,7 @@ def update_profile(current_user):
         update_values = []
         
         # List of allowed fields that can be updated
-        allowed_fields = ['full_name', 'email', 'date_of_birth', 
-                         'phone_number', 'address', 'city', 'state']
+        allowed_fields = ['full_name', 'email', 'phone_number', 'address', 'city', 'state']
         
         for field in allowed_fields:
             if field in data:
@@ -390,27 +370,38 @@ def list_feedback():
 @app.route('/api/profile', methods=['GET'])
 @token_required
 def get_profile(current_user):
+    print(f"Getting profile for user_id: {current_user}")  # Debug log
     try:
         conn = get_db()
         if not conn:
+            print("Database connection failed")  # Debug log
             return jsonify({"error": "Database connection failed"}), 500
             
         cursor = conn.cursor()
-        cursor.execute(
-            "SELECT user_id, full_name, email, date_of_birth, phone_number, address, city, state FROM users WHERE user_id = %s",
-            (current_user,)
-        )
+        query = """
+            SELECT user_id, full_name, email, phone_number, address, city, state 
+            FROM users 
+            WHERE user_id = %s
+        """
+        print(f"Executing query: {query} with user_id: {current_user}")  # Debug log
+        
+        cursor.execute(query, (current_user,))
         user_data = cursor.fetchone()
+        print(f"Query result: {user_data}")  # Debug log
         
         if not user_data:
+            print(f"No user found with ID: {current_user}")  # Debug log
             return jsonify({"error": "User not found"}), 404
             
-        return jsonify({"user": user_data})
+        print(f"Returning user data: {user_data}")  # Debug log
+        return jsonify(user_data)
     except Exception as e:
+        print(f"Error in get_profile: {str(e)}")  # Debug log
         return jsonify({"error": str(e)}), 400
     finally:
         if conn:
             conn.close()
+            print("Database connection closed")  # Debug log
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0', port=8000) 

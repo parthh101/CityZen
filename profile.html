@@ -36,43 +36,72 @@
 
     <!-- Main Content -->
     <div class="container">
-        <div class="form-container">
-            <h2>Your Profile</h2>
-            <form id="profileForm">
-                <div class="form-group">
-                    <label for="fullName">Full Name</label>
-                    <input type="text" id="fullName" name="fullName" required>
+        <section class="profile-section">
+            <div class="profile-container">
+                <div class="profile-header">
+                    <h2>My Profile</h2>
+                    <button id="updateProfileBtn" class="btn">Update Profile</button>
                 </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
+                
+                <div class="profile-info">
+                    <div class="info-item">
+                        <span class="label">Full Name:</span>
+                        <span id="fullName" class="value"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Email:</span>
+                        <span id="email" class="value"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Phone Number:</span>
+                        <span id="phone" class="value"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Address:</span>
+                        <span id="address" class="value"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">City:</span>
+                        <span id="city" class="value"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">State:</span>
+                        <span id="state" class="value"></span>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="dob">Date of Birth</label>
-                    <input type="date" id="dob" name="dob" required>
+
+                <!-- Update Form (Hidden by default) -->
+                <div id="updateForm" class="update-form" style="display: none;">
+                    <h3>Update Profile</h3>
+                    <form id="profileUpdateForm">
+                        <div class="form-group">
+                            <label for="updateFullName">Full Name</label>
+                            <input type="text" id="updateFullName" name="full_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="updatePhone">Phone Number</label>
+                            <input type="tel" id="updatePhone" name="phone_number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="updateAddress">Address</label>
+                            <input type="text" id="updateAddress" name="address" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="updateCity">City</label>
+                            <input type="text" id="updateCity" name="city" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="updateState">State</label>
+                            <input type="text" id="updateState" name="state" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn">Save Changes</button>
+                            <button type="button" id="cancelUpdate" class="btn btn-secondary">Cancel</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" name="phone" required>
-                </div>
-                <div class="form-group">
-                    <label for="address">Address</label>
-                    <input type="text" id="address" name="address" required>
-                </div>
-                <div class="form-group">
-                    <label for="city">City</label>
-                    <input type="text" id="city" name="city" required>
-                </div>
-                <div class="form-group">
-                    <label for="state">State</label>
-                    <input type="text" id="state" name="state" required>
-                </div>
-                <button type="submit" class="btn-primary">Update Profile</button>
-            </form>
-            <div class="form-footer">
-                <button id="logoutBtn" class="btn-secondary">Logout</button>
             </div>
-        </div>
+        </section>
     </div>
 
     <script>
@@ -85,6 +114,141 @@
                 window.location.href = 'login.html';
                 return;
             }
+
+            // Load user profile
+            loadProfile();
+        });
+
+        // Load user profile
+        async function loadProfile() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.error('No token found');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                console.log('Fetching profile with token:', token);
+                const response = await fetch('http://localhost:8000/api/profile', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                console.log('Response status:', response.status);
+                const data = await response.json();
+                console.log('Profile data:', data);
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        console.error('Token expired or invalid');
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('user');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    throw new Error(data.error || `HTTP error! status: ${response.status}`);
+                }
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                displayProfile(data);
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                alert('Failed to load profile: ' + error.message);
+            }
+        }
+
+        // Display profile data
+        function displayProfile(data) {
+            if (!data) {
+                console.error('No profile data received');
+                return;
+            }
+
+            console.log('Displaying profile data:', data);
+
+            // Set profile information
+            document.getElementById('fullName').textContent = data.full_name || 'Not set';
+            document.getElementById('email').textContent = data.email || 'Not set';
+            document.getElementById('phone').textContent = data.phone_number || 'Not set';
+            document.getElementById('address').textContent = data.address || 'Not set';
+            document.getElementById('city').textContent = data.city || 'Not set';
+            document.getElementById('state').textContent = data.state || 'Not set';
+
+            // Set form values
+            document.getElementById('updateFullName').value = data.full_name || '';
+            document.getElementById('updatePhone').value = data.phone_number || '';
+            document.getElementById('updateAddress').value = data.address || '';
+            document.getElementById('updateCity').value = data.city || '';
+            document.getElementById('updateState').value = data.state || '';
+        }
+
+        // Show update form
+        document.getElementById('updateProfileBtn').addEventListener('click', function() {
+            document.getElementById('updateForm').style.display = 'block';
+        });
+
+        // Hide update form
+        document.getElementById('cancelUpdate').addEventListener('click', function() {
+            document.getElementById('updateForm').style.display = 'none';
+        });
+
+        // Handle profile update
+        document.getElementById('profileUpdateForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const formData = {
+                full_name: document.getElementById('updateFullName').value,
+                phone_number: document.getElementById('updatePhone').value,
+                address: document.getElementById('updateAddress').value,
+                city: document.getElementById('updateCity').value,
+                state: document.getElementById('updateState').value
+            };
+
+            try {
+                const response = await fetch('http://localhost:8000/api/profile/update', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        // Token expired or invalid
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('user');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                alert('Profile updated successfully!');
+                document.getElementById('updateForm').style.display = 'none';
+                loadProfile(); // Reload profile data
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                alert('Failed to update profile. Please try again later.');
+            }
         });
 
         // Handle logout
@@ -93,96 +257,6 @@
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             window.location.href = 'login.html';
-        });
-
-        // Load user data
-        async function loadUserData() {
-            try {
-                console.log('Loading profile data...');
-                const response = await fetch('http://localhost:8000/api/profile', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
-                });
-
-                const data = await response.json();
-                console.log('Profile data received:', data);
-
-                if (response.ok) {
-                    // Populate form fields
-                    document.getElementById('fullName').value = data.user.full_name || '';
-                    document.getElementById('email').value = data.user.email || '';
-                    document.getElementById('dob').value = data.user.date_of_birth ? data.user.date_of_birth.split('T')[0] : '';
-                    document.getElementById('phone').value = data.user.phone_number || '';
-                    document.getElementById('address').value = data.user.address || '';
-                    document.getElementById('city').value = data.user.city || '';
-                    document.getElementById('state').value = data.user.state || '';
-                } else {
-                    console.error('Failed to load profile data:', data);
-                    if (response.status === 401) {
-                        // Token expired or invalid
-                        localStorage.removeItem('token');
-                        localStorage.removeItem('user');
-                        window.location.href = 'login.html';
-                    } else {
-                        alert(data.error || 'Failed to load profile data. Please try again later.');
-                    }
-                }
-            } catch (error) {
-                console.error('Error loading profile data:', error);
-                alert('An error occurred while loading your profile data. Please check your internet connection and try again.');
-            }
-        }
-
-        // Load user data when page loads
-        loadUserData();
-
-        // Handle profile update
-        document.getElementById('profileForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const formData = {
-                fullName: document.getElementById('fullName').value,
-                email: document.getElementById('email').value,
-                dob: document.getElementById('dob').value,
-                phone: document.getElementById('phone').value,
-                address: document.getElementById('address').value,
-                city: document.getElementById('city').value,
-                state: document.getElementById('state').value
-            };
-
-            try {
-                console.log('Updating profile with data:', formData);
-                const response = await fetch('http://localhost:8000/api/profile/update', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    },
-                    body: JSON.stringify(formData)
-                });
-
-                const data = await response.json();
-                console.log('Update response:', data);
-
-                if (response.ok) {
-                    alert('Profile updated successfully!');
-                } else {
-                    console.error('Profile update failed:', data);
-                    if (response.status === 401) {
-                        // Token expired or invalid
-                        localStorage.removeItem('token');
-                        localStorage.removeItem('user');
-                        window.location.href = 'login.html';
-                    } else {
-                        alert(data.error || 'Failed to update profile. Please try again.');
-                    }
-                }
-            } catch (error) {
-                console.error('Error updating profile:', error);
-                alert('An error occurred while updating your profile. Please check your internet connection and try again.');
-            }
         });
     </script>
 </body>

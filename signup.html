@@ -5,46 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - CityZen</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">CityZen</div>
-            <div class="nav-right">
-                <ul class="nav-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li class="dropdown">
-                        <a href="#">Services & Resources</a>
-                        <div class="dropdown-content">
-                            <a href="local-events.html">Local Events</a>
-                            <a href="emergency-contacts.html">Emergency Contacts</a>
-                        </div>
-                    </li>
-                    <li><a href="feedback.html">Feedback</a></li>
-                </ul>
-                <div id="authSection" class="auth-buttons">
-                    <a href="login.html" class="auth-btn login-btn">Login</a>
-                    <a href="signup.html" class="auth-btn signup-btn">Sign Up</a>
-                </div>
-                <div id="profileSection" class="dropdown" style="display: none;">
-                    <a href="#" class="active">Profile</a>
-                    <div class="dropdown-content">
-                        <a href="profile.html">My Profile</a>
-                        <a href="login.html" id="logoutBtn">Logout</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <!-- App Logo -->
+    <div class="app-logo">
+        <h1>CityZen</h1>
+    </div>
 
+    <!-- Signup Form -->
     <div class="container">
-        <div class="form-container">
-            <h2>Create Your CityZen Account</h2>
+        <div class="auth-container">
+            <div class="auth-header">
+                <h1>Create Account</h1>
+                <p>Join CityZen to access all features</p>
+            </div>
             <form id="signupForm">
                 <div class="form-group">
                     <label for="fullName">Full Name</label>
-                    <input type="text" id="fullName" name="fullName" required>
+                    <input type="text" id="fullName" name="full_name" required>
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
@@ -55,12 +34,8 @@
                     <input type="password" id="password" name="password" required>
                 </div>
                 <div class="form-group">
-                    <label for="dob">Date of Birth</label>
-                    <input type="date" id="dob" name="dob" required>
-                </div>
-                <div class="form-group">
                     <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" name="phone" required>
+                    <input type="tel" id="phone" name="phone_number" required>
                 </div>
                 <div class="form-group">
                     <label for="address">Address</label>
@@ -74,24 +49,23 @@
                     <label for="state">State</label>
                     <input type="text" id="state" name="state" required>
                 </div>
-                <button type="submit" class="btn-primary">Sign Up</button>
+                <button type="submit" class="auth-btn">Sign Up</button>
             </form>
-            <p class="form-footer">
-                Already have an account? <a href="login.html">Login</a>
-            </p>
+            <div class="auth-link">
+                <p>Already have an account? <a href="login.html">Login</a></p>
+            </div>
         </div>
     </div>
 
     <script>
-        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const formData = {
-                fullName: document.getElementById('fullName').value,
+                full_name: document.getElementById('fullName').value,
                 email: document.getElementById('email').value,
                 password: document.getElementById('password').value,
-                dob: document.getElementById('dob').value,
-                phone: document.getElementById('phone').value,
+                phone_number: document.getElementById('phone').value,
                 address: document.getElementById('address').value,
                 city: document.getElementById('city').value,
                 state: document.getElementById('state').value
@@ -106,22 +80,21 @@
                     body: JSON.stringify(formData)
                 });
 
-                const data = await response.json();
-
-                if (response.ok) {
-                    // Store the JWT token and user data
-                    localStorage.setItem('token', data.access_token);
-                    localStorage.setItem('user', JSON.stringify(data.user));
-                    
-                    // Redirect to index page
-                    window.location.href = 'index.html';
-                } else {
-                    console.error('Signup failed:', data);
-                    alert(data.error || 'Signup failed. Please check your information and try again.');
+                if (!response.ok) {
+                    throw new Error('Signup failed');
                 }
+
+                const data = await response.json();
+                
+                // Store token and user data
+                localStorage.setItem('token', data.access_token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                
+                // Redirect to home page
+                window.location.href = 'index.html';
             } catch (error) {
-                console.error('Error during signup:', error);
-                alert('An error occurred during signup. Please check your internet connection and try again.');
+                console.error('Signup error:', error);
+                alert('Signup failed. Please try again.');
             }
         });
     </script>
